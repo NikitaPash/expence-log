@@ -1,0 +1,28 @@
+{{define "content"}}
+<section class="panel summary">
+  <h1>Summary for {{monthTitle .Month}}</h1>
+
+  <nav class="month-nav" aria-label="Month">
+    <a href="{{.PrevURL}}">&larr; {{monthTitle .Prev}}</a>
+    <a href="{{.NextURL}}">{{monthTitle .Next}} &rarr;</a>
+  </nav>
+
+  {{if .Summary.Categories}}
+  <p class="total">Total spent <strong>{{money .Summary.TotalCents}}</strong></p>
+  <table class="totals">
+    <thead>
+      <tr><th>Category</th><th class="num">Expenses</th><th class="num">Total</th></tr>
+    </thead>
+    <tbody>
+      {{range .Summary.Categories}}
+      <tr><td>{{.CategoryName}}</td><td class="num">{{.ExpenseCount}}</td><td class="num">{{money .TotalCents}}</td></tr>
+      {{end}}
+    </tbody>
+  </table>
+  {{else}}
+  <p class="empty">Nothing spent in {{monthTitle .Month}}. Expenses you add for this month will be totalled here.</p>
+  {{end}}
+
+  <p class="actions"><a href="/expenses?month={{monthParam .Month}}">Back to expenses for {{monthTitle .Month}}</a></p>
+</section>
+{{end}}

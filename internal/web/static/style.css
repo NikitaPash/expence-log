@@ -1,0 +1,124 @@
+:root {
+  --bg: #f3f4f6;
+  --panel: #ffffff;
+  --text: #1f2933;
+  --muted: #5f6b7a;
+  --line: #d9dee5;
+  --accent: #1d5fbf;
+  --error: #b42318;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font: 16px/1.5 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+}
+
+a { color: var(--accent); }
+
+.site-header {
+  background: var(--text);
+  padding: 0.75rem 1rem;
+}
+.site-header .brand { color: #fff; font-weight: 600; text-decoration: none; }
+
+main {
+  max-width: 56rem;
+  margin: 1.5rem auto;
+  padding: 0 1rem;
+}
+
+.panel {
+  /* flow-root makes the panel a block formatting context, so the heading's
+     top margin stays inside the panel instead of collapsing through it
+     (the panel has no top padding or border to stop the collapse). */
+  display: flow-root;
+  background: var(--panel);
+  border-radius: 8px;
+  padding: 0 1.25rem 1.25rem;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.08);
+}
+
+h1 {
+  margin: 1.25rem 0 0.75rem;
+  font-size: 1.5rem;
+  line-height: 1.25;
+}
+
+.month-nav { display: flex; justify-content: space-between; gap: 1rem; margin-bottom: 1rem; }
+
+.filter { display: flex; flex-wrap: wrap; align-items: center; gap: 0.5rem; margin-bottom: 1rem; }
+
+.actions { display: flex; flex-wrap: wrap; align-items: center; gap: 0.75rem; }
+
+.button, button {
+  display: inline-block;
+  padding: 0.4rem 0.8rem;
+  border: 1px solid var(--accent);
+  border-radius: 6px;
+  background: var(--accent);
+  color: #fff;
+  font: inherit;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+table { width: 100%; border-collapse: collapse; margin: 1rem 0; }
+th, td { padding: 0.5rem; border-bottom: 1px solid var(--line); text-align: left; vertical-align: top; }
+thead th { color: var(--muted); font-weight: 600; font-size: 0.875rem; }
+.num { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
+td.date { white-space: nowrap; }
+/* Long unbroken text (URLs, order numbers) may break anywhere. "anywhere"
+   (unlike "break-word") also lowers the cell's min-content width, so the
+   auto-layout table can shrink to fit its container. */
+td.desc { overflow-wrap: anywhere; }
+
+.total { font-size: 1.125rem; margin: 0 0 0.5rem; }
+.total strong { font-size: 1.5rem; font-variant-numeric: tabular-nums; margin-left: 0.5rem; }
+.totals tbody tr:first-child td { font-weight: 600; }
+
+@media (max-width: 30rem) {
+  main { padding: 0 0.5rem; }
+  .panel { padding: 0 0.75rem 0.75rem; }
+  th, td { padding: 0.4rem 0.25rem; }
+
+  /* Five columns do not fit a phone; stack each expense into a small grid:
+       date        amount
+       description (full width)
+       category    edit                                                   */
+  table.expenses, table.expenses tbody, table.expenses tfoot { display: block; }
+  table.expenses thead { display: none; }
+  table.expenses tr {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    grid-template-areas: "date amount" "desc desc" "cat edit";
+    column-gap: 0.75rem;
+    padding: 0.5rem 0;
+    border-bottom: 1px solid var(--line);
+  }
+  table.expenses td, table.expenses th { border: 0; padding: 0.1rem 0; }
+  table.expenses .date { grid-area: date; color: var(--muted); }
+  table.expenses .num { grid-area: amount; font-weight: 600; }
+  table.expenses .desc { grid-area: desc; }
+  table.expenses .cat { grid-area: cat; color: var(--muted); font-size: 0.875rem; }
+  table.expenses .edit { grid-area: edit; text-align: right; }
+  table.expenses tfoot tr { grid-template-areas: "label amount"; }
+  table.expenses tfoot th { grid-area: label; }
+  table.expenses tfoot .edit { display: none; }
+}
+
+.empty { color: var(--muted); padding: 1rem 0; }
+
+.expense-fields { border: 1px solid var(--line); border-radius: 6px; margin: 0 0 1rem; padding: 0.75rem 1rem; }
+.field { display: flex; flex-direction: column; gap: 0.25rem; margin-bottom: 0.75rem; }
+.field input, .field select { font: inherit; padding: 0.4rem; border: 1px solid var(--line); border-radius: 4px; max-width: 24rem; }
+.has-error input, .has-error select { border-color: var(--error); }
+.error, .form-error { color: var(--error); font-size: 0.875rem; }
+
+.visually-hidden {
+  position: absolute; width: 1px; height: 1px; overflow: hidden;
+  clip: rect(0 0 0 0); white-space: nowrap;
+}

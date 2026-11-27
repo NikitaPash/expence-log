@@ -1,0 +1,52 @@
+{{define "content"}}
+<section class="panel">
+  <h1>Expenses for {{monthTitle .Month}}</h1>
+
+  <nav class="month-nav" aria-label="Month">
+    <a href="{{.PrevURL}}">&larr; {{monthTitle .Prev}}</a>
+    <a href="{{.NextURL}}">{{monthTitle .Next}} &rarr;</a>
+  </nav>
+
+  <form class="filter" method="get" action="/expenses">
+    <input type="hidden" name="month" value="{{monthParam .Month}}">
+    <label for="category">Category</label>
+    <select id="category" name="category">
+      <option value="">All categories</option>
+      {{range .Categories}}
+      <option value="{{.ID}}"{{if eq .ID $.CategoryID}} selected{{end}}>{{.Name}}</option>
+      {{end}}
+    </select>
+    <button type="submit">Filter</button>
+  </form>
+
+  <p class="actions">
+    <a class="button" href="/expenses/new?month={{monthParam .Month}}">Add expense</a>
+    <a class="button" href="/expenses/new?month={{monthParam .Month}}&amp;mode=pair">Add two expenses</a>
+    <a href="/summary?month={{monthParam .Month}}">Monthly summary</a>
+  </p>
+
+  {{if .Expenses}}
+  <table class="expenses">
+    <thead>
+      <tr><th>Date</th><th>Description</th><th>Category</th><th class="num">Amount</th><th><span class="visually-hidden">Actions</span></th></tr>
+    </thead>
+    <tbody>
+      {{range .Expenses}}
+      <tr>
+        <td class="date">{{.Date.Format "2006-01-02"}}</td>
+        <td class="desc">{{.Description}}</td>
+        <td class="cat">{{.CategoryName}}</td>
+        <td class="num">{{money .AmountCents}}</td>
+        <td class="edit"><a href="/expenses/{{.ID}}/edit">Edit</a></td>
+      </tr>
+      {{end}}
+    </tbody>
+    <tfoot>
+      <tr><th colspan="3">Total shown</th><td class="num">{{money .TotalCents}}</td><td class="edit"></td></tr>
+    </tfoot>
+  </table>
+  {{else}}
+  <p class="empty">No expenses recorded for {{monthTitle .Month}}{{if .CategoryID}} in this category{{end}}.</p>
+  {{end}}
+</section>
+{{end}}
